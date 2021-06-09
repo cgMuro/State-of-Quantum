@@ -9,11 +9,11 @@ I linked all the resources used for both the theoretical understanding and the c
 #### Topics covered
 * Bernstein-Vazirani algorithm
 * Deutsch-Jozsa algorithm
+* Quantum Fourier Transform
+* Quantum Phase Estimation
 * Simon's problem
 
 #### Next topics on the list
-* Quantum Fourier Transform
-* Quantum Phase Estimation
 * Shor's Algorithm
 * Grover's Algorithm
 * Quantum Counting
