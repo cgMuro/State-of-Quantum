@@ -3,9 +3,6 @@
 
 import numpy as np
 import qiskit
-from qiskit.circuit.gate import Gate
-from qiskit.providers.ibmq import IBMQ, least_busy
-from qiskit.visualization import plot_histogram
 
 
 class DeutschJozsa():
@@ -22,7 +19,7 @@ class DeutschJozsa():
         self.type = type
         self.num_bits  = num_bits
 
-    def oracle(self) -> Gate:
+    def oracle(self) -> qiskit.circuit.gate.Gate:
         """ Based on the type of oracle creates a quantum oracle with n input qubits and 1 output qubit. """
         # Create circuit
         circuit = qiskit.QuantumCircuit(self.num_bits+1)
@@ -62,7 +59,7 @@ class DeutschJozsa():
 
         return oracle_gate
 
-    def algorithm(self, oracle) -> qiskit.QuantumCircuit:
+    def algorithm(self, oracle: qiskit.circuit.gate.Gate) -> qiskit.QuantumCircuit:
         """ Performs the Deutsch-Jozsa algorithm with the given oracle. """
         # Create circuit
         circuit = qiskit.QuantumCircuit(
@@ -91,7 +88,7 @@ class DeutschJozsa():
 
         return circuit
 
-    def simulation(self, circuit, plot: bool):
+    def simulation(self, circuit: qiskit.QuantumCircuit, plot: bool):
         """ Performs simulation on the given circuit. """
         # Get simulator and serialize qobj
         qasm_simulator = qiskit.Aer.get_backend('qasm_simulator')
@@ -104,21 +101,21 @@ class DeutschJozsa():
 
         # Plot histogram if requested
         if plot:
-            plot_histogram(answer)
+            qiskit.visualization.plot_histogram(answer)
 
         return answer
 
-    def run_quantum_hardware(self, circuit, plot: bool):
+    def run_quantum_hardware(self, circuit: qiskit.QuantumCircuit, plot: bool):
         """ Run the given circuit on the IBM quantum hardware in the cloud. """
         # Load IBMQ account and get the least busy backend device with greater than or equal to (n+1) qubits
-        IBMQ.load_account()
-        provider = IBMQ.get_provider(hub='ibm-q')
-        backend = least_busy(provider.backends(filters=lambda x: x.configuration().n_qubits >= (self.num_bits+1) and not x.configuration().simulator and x.status().operational == True))
+        qiskit.providers.ibmq.IBMQ.load_account()
+        provider = qiskit.providers.ibmq.IBMQ.get_provider(hub='ibm-q')
+        backend = qiskit.providers.ibmq.least_busy(provider.backends(filters=lambda x: x.configuration().n_qubits >= (self.num_bits+1) and not x.configuration().simulator and x.status().operational == True))
         print('Least busy backend:', backend)
 
-        # Run our circuit on the least busy backend and monitor the execution of the job in the queue
-        transpiled_circuit = qiskit.compiler.transpiler.transpile(circuit, backend, optimization_level=3)
-        qobj = qiskit.compiler.assembler.assemble(transpiled_circuit, backend)
+        # Run circuit on the least busy backend and monitor the execution of the job in the queue
+        transpiled_circuit = qiskit.transpile(circuit, backend, optimization_level=3)
+        qobj = qiskit.assemble(transpiled_circuit, backend)
         job = backend.run(qobj)
         qiskit.tools.monitor.job_monitor(job, interval=2)
 
@@ -128,6 +125,6 @@ class DeutschJozsa():
 
         # Plot histogram if requested
         if plot:
-            plot_histogram(answer)
+            qiskit.visualization.plot_histogram(answer)
 
         return answer
