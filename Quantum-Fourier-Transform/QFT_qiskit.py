@@ -1,5 +1,5 @@
 # Quantum Fourier Transform implementation with Qiskit
-# Main resources used: https://qiskit.org/textbook/ch-algorithms/quantum-fourier-transform.html
+# Main resource used: https://qiskit.org/textbook/ch-algorithms/quantum-fourier-transform.html
 
 import numpy as np
 import qiskit
@@ -48,7 +48,7 @@ class QuantumFourierTransform():
         return circuit
     
     def algorithm(self, draw: bool = False):
-        """ Main function. It applies the Quantum Fourier Transform and return the circuit. """
+        """ Main function. It applies the Quantum Fourier Transform and returns the circuit. """
         # Rotare circuit
         circuit = self.rotations(self.circuit, self.n)
         # Swaps qubits
